@@ -16,7 +16,7 @@ function isolatedContainer(fullNames) {
     var fullName = fullNames[i - 1];
     container.register(fullName, resolver.resolve(fullName));
   }
-  return container;s
+  return container;
 }
 
 function buildContextVariables(context) {
@@ -47,13 +47,19 @@ function defaultSubject(options, factory) {
   return factory.create(options);
 }
 
-function describeApp(fullName, description, specDefinitions) {
+function describeApp(fullName, description, specDefinitions, delegate) {
   // var container;
 
   jasmine.getEnv().beforeEach(function() {
+
+    if (Ember.$('#ember-testing').length === 0) {
+      Ember.$('<div id="ember-testing"/>').appendTo(document.body);
+    }
+
     var needs = [fullName].concat(specDefinitions.needs || []);
     container = isolatedContainer(needs);
 
+    specDefinitions.subject = specDefinitions.subject || defaultSubject;
 
     function factory() {
       return container.lookupFactory(fullName);
@@ -66,16 +72,62 @@ function describeApp(fullName, description, specDefinitions) {
       __setup_properties__: specDefinitions
     };
 
-    if (Ember.$('#ember-testing').length === 0) {
-      Ember.$('<div id="ember-testing"/>').appendTo(document.body);
+    if (delegate) {
+      delegate(container, context, defaultSubject, specDefinitions);
     }
 
     buildContextVariables(context);
     specDefinitions.context = context;
-    specDefinitions.subject = specDefinitions.subject || defaultSubject;
   });
 
+  jasmine.getEnv().afterEach(function() {
+    Ember.run(function(){
+      container.destroy();
+      
+      if (context.dispatcher) {
+        context.dispatcher.destroy();
+      }
+    });
+
+    // if(specDefinitions.afterEach) {
+    //   specDefinitions.afterEach.call(context, container);
+    // }
+
+    Ember.$('#ember-testing').remove();
+    App.reset();
+  });
   return jasmine.getEnv().describe(description, specDefinitions);
+}
+
+function describeComponent(name, description, specDefinitions) {
+  return describeApp('component:'+name, description, specDefinitions, function(container, context, defaultSubject, specDefinitions) {
+    var layoutName = 'template:components/' + name;
+
+    var layout = resolver.resolve(layoutName);
+
+    if (layout) {
+      container.register(layoutName, layout);
+      container.injection('component:' + name, 'layout', layoutName);
+    }
+
+    context.dispatcher = Ember.EventDispatcher.create();
+    context.dispatcher.setup({}, '#ember-testing');
+
+    context.__setup_properties__.append = function(selector) {
+      var containerView = Ember.ContainerView.create({container: container});
+      var view = Ember.run(function(){
+        var subject = context.subject();
+        containerView.pushObject(subject);
+        // TODO: destory this somewhere
+        containerView.appendTo('#ember-testing');
+        return subject;
+      });
+
+      return view.$();
+    };
+    context.__setup_properties__.$ = context.__setup_properties__.append;
+    specDefinitions.append = context.__setup_properties__.append;
+  });
 }
 
 function it(desc, func) {

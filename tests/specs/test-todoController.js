@@ -30,3 +30,4 @@ describeApp('controller:todo', 'Todo Controller', function() {
 		expect(ctrl.get('model').length).toBe(0);
 	})
 });
+
