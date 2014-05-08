@@ -1,0 +1,33 @@
+<h3>Ember Testing Demo app</h3>
+
+<p>This sample app contains some test cases written using QUnit and Ember-QUnit. You can view the test cases in the <code>tests/specs</code> folder.</p>
+
+{{#if window.isTestModeEnabled}}
+<p><strong>Test mode is active.</strong></p>
+<p>You can now run the tests by <a href="./?test">appending <code>/?test</code> to the URL</a>. This can be used to run tests while writing code.</p>
+{{else}}
+<p><strong>Test mode is not active.</strong></p>
+<p>You can enable the QUnit runner by running <code>grunt dev</code>. This can be used to run tests while writing code.</p>
+{{/if}}
+
+<p>You can also run the tests using Karma with the command <code>grunt dist</code>.</p>
+
+<hr/>
+
+The test cases in this demo app test the following Todo List app:
+<h3>{{#link-to 'todo' id="todo-link"}}Go to Todo list app{{/link-to}}</h3>
+
+<hr/>
+
+Here are some additional components that are also tested: 
+
+<p>
+    {{my-button buttonText="Before" afterValue="After"}}
+</p>
+<p>
+    {{my-button buttonText="A" afterValue="B"}}
+</p>
+
+<ul>
+	<li>{{#link-to 'page2' id="page2-link"}}Go to page 2{{/link-to}}</li>
+</ul>
