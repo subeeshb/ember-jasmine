@@ -49,9 +49,7 @@ function defaultSubject(options, factory) {
 
 function describeApp(fullName, description, specDefinitions, delegate) {
   // var container;
-
   jasmine.getEnv().beforeEach(function() {
-
     if (Ember.$('#ember-testing').length === 0) {
       Ember.$('<div id="ember-testing"/>').appendTo(document.body);
     }
@@ -73,10 +71,15 @@ function describeApp(fullName, description, specDefinitions, delegate) {
     };
 
     if (delegate) {
-      delegate(container, context, defaultSubject, specDefinitions);
+      delegate(container, context, defaultSubject);
     }
-
+    console.debug(fullName);
+    console.debug('A');
+    console.debug(context.__setup_properties__.append);
     buildContextVariables(context);
+    console.debug('B');
+    console.debug(context.__setup_properties__.append);
+    context.append = context.__setup_properties__.append;
     specDefinitions.context = context;
   });
 
@@ -100,7 +103,7 @@ function describeApp(fullName, description, specDefinitions, delegate) {
 }
 
 function describeComponent(name, description, specDefinitions) {
-  return describeApp('component:'+name, description, specDefinitions, function(container, context, defaultSubject, specDefinitions) {
+  return describeApp('component:'+name, description, specDefinitions, function(container, context, defaultSubject) {
     var layoutName = 'template:components/' + name;
 
     var layout = resolver.resolve(layoutName);
@@ -112,7 +115,6 @@ function describeComponent(name, description, specDefinitions) {
 
     context.dispatcher = Ember.EventDispatcher.create();
     context.dispatcher.setup({}, '#ember-testing');
-
     context.__setup_properties__.append = function(selector) {
       var containerView = Ember.ContainerView.create({container: container});
       var view = Ember.run(function(){
@@ -126,13 +128,13 @@ function describeComponent(name, description, specDefinitions) {
       return view.$();
     };
     context.__setup_properties__.$ = context.__setup_properties__.append;
-    specDefinitions.append = context.__setup_properties__.append;
   });
 }
 
 function it(desc, func) {
   function wrapper() {    
     resetViews();
+    
     var result = func.call(context);
 
     // function failTestOnPromiseRejection(reason) {
