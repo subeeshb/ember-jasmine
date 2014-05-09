@@ -37,13 +37,42 @@ function globalize() {
   window.describeApp = describeApp;
   window.describeComponent = describeComponent;
   window.moduleForModel = moduleForModel;
-  window.it = it;
+  // window.it = it;
   window.setResolver = setResolver;
 }
 
 jasmine.Suite.prototype.setFullName = function(fullName) {
   this.fullName = fullName;
   return this;
+}
+
+jasmine.Env.prototype.it = function(description, func) {
+  var spec = new jasmine.Spec(this, this.currentSuite, description);
+
+  this.currentSuite.add(spec);
+  this.currentSpec = spec;
+  var suite = this.currentSuite;
+  
+  var wrapper = function() {
+    // var context = testContext.get();
+    // var context = jasmine.getEnv().currentSpec.suite.context;
+    var context = suite.context;
+    
+    Ember.View.views = {};
+    if(context) {
+      var result = func.call(context);
+    } else {
+      var result = func();
+    }
+    
+  }
+
+  if(func) {
+    spec.runs(wrapper);
+  }
+  
+
+  return spec;
 }
 
 exports.globalize = globalize;
@@ -131,6 +160,8 @@ exports["default"] = function describeApp(fullName, description, specDefinitions
   var container;
   var context;
 
+  var suite = jasmine.getEnv().describe(description, specDefinitions).setFullName(fullName);
+
   var setupFunc = function() {
     if (Ember.$('#ember-testing').length === 0) {
       Ember.$('<div id="ember-testing"/>').appendTo(document.body);
@@ -156,24 +187,14 @@ exports["default"] = function describeApp(fullName, description, specDefinitions
     
     context = testContext.get();
     context.fullName = fullName;
-    console.debug("d: " + context.fullName);
 
     if (delegate) {
       delegate(container, context, defaultSubject);
     }
 
-    specDefinitions.setContext = function(context) {
-      this.context = context;
-    };
-
     buildContextVariables(context);
-    specDefinitions.setContext(context);
 
-    if(context.append) {
-      specDefinitions.append = context.append;
-    }
-
-    this.context = context;
+    suite.context = context;
   };
 
   var teardownFunc = function() {
@@ -189,7 +210,7 @@ exports["default"] = function describeApp(fullName, description, specDefinitions
     App.reset();
   };
   
-  var suite = jasmine.getEnv().describe(description, specDefinitions).setFullName(fullName);
+  
   suite.before_.unshift(setupFunc);
   suite.after_.unshift(teardownFunc);
   return suite;
@@ -252,7 +273,6 @@ exports.get = get;
 },{}],8:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
-//import QUnit from 'qunit'; // Assumed global in runner
 var testContext = _dereq_("./test-context")["default"] || _dereq_("./test-context");
 
 function resetViews() {
@@ -260,11 +280,11 @@ function resetViews() {
 }
 
 exports["default"] = function it(desc, func) {
+  // var context = this.context;
 
   function wrapper() {
     // var context = testContext.get();
     var context = jasmine.getEnv().currentSpec.suite.context;
-    console.debug('w: ' + context.fullName);
     resetViews();
     var result = func.call(context);
 
