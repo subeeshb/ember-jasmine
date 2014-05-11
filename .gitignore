@@ -1,4 +1,4 @@
-node_modules/
-dist/
-templates/js/
-tests/results/
+sample_app/node_modules/
+sample_app/dist/
+sample_app/templates/js/
+sample_app/tests/results/

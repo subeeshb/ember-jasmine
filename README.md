@@ -1,89 +1,69 @@
-Ember Integration testing POC
-=============================
+Ember-Jasmine
+=============
 
-Installing Node and NPM in SCB Laptop
----------------
+Unit test helpers for Ember.js using Jasmine.
 
+About
+-----
 
-Getting started
----------------
+Ember-Jasmine uses your application's resolver to find and automatically create test subjects for you with additional helpers. This project is based on Ember QUnit.
 
-Node.JS is required to install dependencies and run the app. Ensure that Grunt and Karma have been installed globally. If not, run the following commands:
+Helpers
+-------
 
-```
-$ npm install -g grunt-cli
+### `describeApp(fullName, description, function() {
+	//test cases
+})`
 
-$ npm install -g karma
-```
+- `fullName`: (String) - The full name of the unit, ie
+  `controller:application`, `route:index`.
 
-Then install the project dependencies by running this command in the project folder.
-
-```
-$ npm install
-```
+- `description`: (String) - The description of the suite
 
 
-Building the app
-----------------
+### `describeComponent(componentName, description, function() {
+	//test cases
+})`
 
-Build the project and start a server by running the following command:
+- `componentName`: (String) - The short name of the component that you'd use in a
+  template, ie `x-foo`, `ic-tabs`, etc.
 
-```
-$ grunt server
-```
-
-This will build the app to the dist folder and start a server. Open the app in your browser by going to http://localhost:9999
+- `description`: (String) - The description of the suite
 
 
-Running tests using QUnit
--------------------------
+### `describeModel(modelName, description, function() {
+	//test cases
+})`
 
-```
-$ grunt dev
-```
+- `modelName`: (String) - The short name of the model you'd use in `store`
+  operations ie `user`, `assignmentGroup`, etc.
 
-The above command will build the app and inject a QUnit runner script and libraries. Run the tests by going to http://localhost:9999/?test
-
-The grunt task above will also watch for changes to scripts and test cases and automatically build the app when changes are made.
-
-In this mode, navigate to http://localhost:9999/?test to run tests. After you have made changes, refresh the page to rerun the tests against the updated code without having to run grunt again. 
+- `description`: (String) - The description of the suite
 
 
-Running tests using Karma
--------------------------
+Usage
+-----
 
-```
-$ grunt dist
-```
+Include the `ember-jasmine.js` file when running tests. Inject test helpers into the global namespace using the `emberjasmine.globalize()` function. The full setup should look something like this:
 
-Run the command above to build and run the tests using the Karma test runner. By default, tests will be executed in PhantomJS (configurable in the karma.conf.js file). Karma will generate the following output:
+`
+emberjasmine.globalize();
+App.rootElement = '#ember-testing';
+App.setupForTesting();
+App.injectTestHelpers();
+setResolver(Ember.DefaultResolver.create({ namespace: App }));
+`
 
-* A test results summary at ./tests/results/results.html
-* A code coverage report at ./tests/results/[browser name]/index.html
-
-Running single test cases
--------------------------
-
-This POC includes the qunit-karma-launcher plugin. This adds omodule(), otest(), oasyncTest() functions to run only specific modules or tests respectively. To run only one test case in a file, change the test() function to otest().
-
-For example, changing 
-
-```
-test("check routing to page 2", function() { ...
-```
-
-to 
-
-```
-otest("check routing to page 2", function() { ...
-```
-
-will run this test case only, ignoring all other test cases.
+Refer to the `tests/vendor/ember-jasmine-setup.js` file in the sample app for an example.
 
 
-Editing app code and test cases
--------------------------------
+Sample code
+-----------
 
-The test cases are defined in various files under the *./tests/specs* folder. All core application logic is in *./js/app.js*. The sample todo list app is implemented in *./js/modules/todo/todoList.js*. 
+The sample app in this project demonstrates how the helpers can be used. Refer to the test specs in the `tests/specs` folder, or checkout and run the sample app's tests using Karma.
 
-To change the Karma configuration, edit *./karma.conf.js*.
+
+Contribution
+------------
+
+This is a work in progress and may not be entirely stable yet. Feedback and contributions are highly welcome.
