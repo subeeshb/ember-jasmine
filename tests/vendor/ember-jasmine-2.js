@@ -21,9 +21,9 @@ exports["default"] = function isolatedContainer(fullNames) {
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 var isolatedContainer = _dereq_("./isolated-container")["default"] || _dereq_("./isolated-container");
-var describeApp = _dereq_("./module-for")["default"] || _dereq_("./module-for");
-var describeComponent = _dereq_("./module-for-component")["default"] || _dereq_("./module-for-component");
-var moduleForModel = _dereq_("./module-for-model")["default"] || _dereq_("./module-for-model");
+var describeApp = _dereq_("./describe-app")["default"] || _dereq_("./describe-app");
+var describeComponent = _dereq_("./describe-component")["default"] || _dereq_("./describe-component");
+var moduleForModel = _dereq_("./describe-model")["default"] || _dereq_("./describe-model");
 var it = _dereq_("./test")["default"] || _dereq_("./test");
 var testResolver = _dereq_("./test-resolver")["default"] || _dereq_("./test-resolver");
 
@@ -82,10 +82,10 @@ exports.describeComponent = describeComponent;
 exports.moduleForModel = moduleForModel;
 exports.it = it;
 exports.setResolver = setResolver;
-},{"./isolated-container":1,"./module-for":5,"./module-for-component":3,"./module-for-model":4,"./test":8,"./test-resolver":7}],3:[function(_dereq_,module,exports){
+},{"./isolated-container":1,"./describe-app":5,"./describe-component":3,"./describe-model":4,"./test":8,"./test-resolver":7}],3:[function(_dereq_,module,exports){
 "use strict";
 var testResolver = _dereq_("./test-resolver")["default"] || _dereq_("./test-resolver");
-var describeApp = _dereq_("./module-for")["default"] || _dereq_("./module-for");
+var describeApp = _dereq_("./describe-app")["default"] || _dereq_("./describe-app");
 var Ember = window.Ember["default"] || window.Ember;
 
 exports["default"] = function describeComponent(name, description, specDefinitions) {
@@ -119,13 +119,13 @@ exports["default"] = function describeComponent(name, description, specDefinitio
     context.__setup_properties__.$ = context.__setup_properties__.append;
   });
 }
-},{"./module-for":5,"./test-resolver":7}],4:[function(_dereq_,module,exports){
+},{"./describe-app":5,"./test-resolver":7}],4:[function(_dereq_,module,exports){
 "use strict";
-var describeApp = _dereq_("./module-for")["default"] || _dereq_("./module-for");
+var describeApp = _dereq_("./describe-app")["default"] || _dereq_("./describe-app");
 var Ember = window.Ember["default"] || window.Ember;
 
-exports["default"] = function moduleForModel(name, description, callbacks) {
-  describeApp('model:' + name, description, callbacks, function(container, context, defaultSubject) {
+exports["default"] = function describeModel(name, description, specDefinitions) {
+  return describeApp('model:' + name, description, specDefinitions, function(container, context, defaultSubject) {
     if (DS._setupContainer) {
       DS._setupContainer(container);
     } else {
@@ -150,7 +150,7 @@ exports["default"] = function moduleForModel(name, description, callbacks) {
     }
   });
 }
-},{"./module-for":5}],5:[function(_dereq_,module,exports){
+},{"./describe-app":5}],5:[function(_dereq_,module,exports){
 "use strict";
 var Ember = window.Ember["default"] || window.Ember;
 //import QUnit from 'qunit'; // Assumed global in runner
