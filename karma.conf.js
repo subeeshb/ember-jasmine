@@ -18,7 +18,7 @@ module.exports = function(config) {
       'js/app.js',
       'js/modules/**/*.js',
       'templates/js/**/*.js',
-      'tests/vendor/ember-jasmine-2.js',
+      'tests/vendor/ember-jasmine.js',
       'tests/vendor/ember-jasmine-setup.js',
       'tests/specs/**/test-*.js',
       // 'tests/vendor/qunit-karma-launch.js'
