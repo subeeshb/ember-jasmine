@@ -39,6 +39,7 @@ function globalize() {
   window.moduleForModel = moduleForModel;
   // window.it = it;
   window.setResolver = setResolver;
+  window.start = function() { };
 }
 
 jasmine.Suite.prototype.setFullName = function(fullName) {
