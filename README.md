@@ -11,9 +11,11 @@ Ember-Jasmine uses your application's resolver to find and automatically create 
 Helpers
 -------
 
-### `describeApp(fullName, description, function() {
+`
+describeApp(fullName, description, function() {
 	//test cases
-})`
+})
+`
 
 - `fullName`: (String) - The full name of the unit, ie
   `controller:application`, `route:index`.
@@ -21,9 +23,11 @@ Helpers
 - `description`: (String) - The description of the suite
 
 
-### `describeComponent(componentName, description, function() {
+`
+describeComponent(componentName, description, function() {
 	//test cases
-})`
+})
+`
 
 - `componentName`: (String) - The short name of the component that you'd use in a
   template, ie `x-foo`, `ic-tabs`, etc.
@@ -31,9 +35,11 @@ Helpers
 - `description`: (String) - The description of the suite
 
 
-### `describeModel(modelName, description, function() {
+`
+describeModel(modelName, description, function() {
 	//test cases
-})`
+})
+`
 
 - `modelName`: (String) - The short name of the model you'd use in `store`
   operations ie `user`, `assignmentGroup`, etc.
