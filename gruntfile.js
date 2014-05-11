@@ -63,21 +63,7 @@ module.exports = function(grunt) {
             'templates/js/**/*.js'
             ],
             dest:'dist/js/app.js'
-          },
-
-          app_for_testing:{
-            src:[
-            'dist/js/app.js',
-            'tests/runner.js'
-            ],
-            dest:'dist/js/app.js'
-          },
-          test_specs: {
-            src:[
-            'tests/specs/**/test-*.js'
-            ],
-            dest:'dist/tests/specs.js'
-          }          
+          }       
         },
 
         copy: {
@@ -143,7 +129,7 @@ module.exports = function(grunt) {
         },
         css: {
           files: ['js/**/*', 'tests/**/*'],
-          tasks: ['build_with_qunit'],
+          tasks: ['default'],
         },
       }
 
@@ -166,17 +152,9 @@ grunt.registerTask('default', [
   'copy'
   ]);
 
-grunt.registerTask('build_with_qunit', [
-  'default',
-  'concat:app_for_testing',
-  'copy:tests',
-  'concat:test_specs'
-  ]);
-
-
 //for development. Build, add test hooks, and watch for changes.
 grunt.registerTask('dev', [
-  'build_with_qunit',
+  'default',
   'nodestatic:server_watch',
   'watch'
   ]);
