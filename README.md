@@ -73,3 +73,8 @@ Contribution
 ------------
 
 This is a work in progress and may not be entirely stable yet. Feedback and contributions are highly welcome.
+
+
+License
+-------
+This software is licensed under the MIT License.
